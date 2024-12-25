@@ -1,6 +1,10 @@
 **Title of the Project**
 
-Project Management Form that will store data in PROJECT-TABLE relation of COLLEGE-DB database
+Project Management Form 
+
+**Description**
+
+This form will store data in PROJECT-TABLE relation of COLLEGE-DB database
 
 Input Fields: {Project-ID, Project-Name, Assigned-To, Assignment-Date, Deadline}
 

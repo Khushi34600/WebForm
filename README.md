@@ -1,16 +1,14 @@
 # Title of the Project
 
-Project Management Form 
+## Project Management Form 
 
 # Description
 
-This form will store data in PROJECT-TABLE relation of COLLEGE-DB database
+## This form will store data in PROJECT-TABLE relation of COLLEGE-DB database 
+## Input Fields: {Project-ID, Project-Name, Assigned-To, Assignment-Date, Deadline} 
+## Primary key: Project ID
 
-Input Fields: {Project-ID, Project-Name, Assigned-To, Assignment-Date, Deadline}
-
-Primary key: Project ID
-
-**Benefits of using JsonPowerDB**
+## Benefits of using JsonPowerDB
 1. Simplicity:
 JsonPowerDB is built on the JSON format, making it easy to understand and use, especially for developers familiar with JSON.
 2. High Performance:

@@ -30,3 +30,14 @@ Since it uses JSON, the data is self-documenting, which can simplify understandi
 10. Multi-Platform Support:
 JsonPowerDB can be used across different platforms and programming languages, enhancing its versatility.
 
+## Release History
+
+### v1.0.0 (2024-12-29)
+- Initial release of the Project Details Form.
+- Implemented form fields for Project ID, Name, Assigned To, Assignment Date, and Deadline.
+- Integrated with JsonPowerDB for data storage and retrieval.
+- Added functionality for Save, Update, and Reset buttons.
+- Included form validation for required fields.
+- Utilized Bootstrap for responsive design.
+- Provided basic error handling and user feedback.
+

@@ -1,15 +1,206 @@
-<!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
     <body>
-        <div>TODO write content</div>
+        <div class="container">
+            <div class='page-header text-centre'>
+                 <h2>Form for project details</h2>
+            </div>
+           
+            <form id="projectForm" method="get">
+                <div class="form-group">
+                    <label >Project ID:</label>
+                    <input type='text'  id='projectId' class='form-control' onclick="getProject()" placeholder="Enter Project ID" required>
+                </div>
+                <div>
+                    <label >Project Name:</label>
+                    <input type='text'  id='projectName' class='form-control' placeholder="Enter Project Name" >
+                </div>
+                <div class="form-group">
+                    <label >Assigned TO:</label>
+                    <input type='text'  id='assignedto' class='form-control' placeholder="Enter Your Name" >
+                </div>
+                <div class="form-group">
+                    <label >Assignment Date:</label>
+                    <input type='date'  id='assignmentdate' class='form-control'  >
+                </div>
+                 <div class="form-group">
+                    <label >Deadline:</label>
+                    <input type='date'  id='deadline' class='form-control'  >
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" id="save" onclick="saveData();">Save</button>
+                    <button type="button" class="btn btn-primary" id="update" onclick="updateData();">Update</button>
+                    <button type="button" class="btn btn-primary" id="reset" onclick="resetForm();">Reset</button>
+                </div>
+            </form>
+        </div>
+        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+       
+        <script>
+            $("#projectId").focus();
+            
+            var dbname="COLLAGE-DB";
+            var relationname="PROJECT-TABLE";
+            var connToken='90934363|-31949227956832727|90957077';
+            var jpdbBaseURL='http://api.login2explore.com:5577';
+            var jpdbIRL='/api/irl';
+            var jpdbIML='/api/iml';
+            
+            function saveRecNoToLS(jsonObj){
+                var lvData = JSON.parse(jsonObj.data);
+                localStorage.setItem('recno',lvData.rec_no);
+            }
+            
+            function getProjectIdAsJasonObj(){
+                var projectId = $('#projectId').val();
+                var jsonStr={
+                    id:projectId
+                };
+                return JASON.stringify(jsonStr);
+            }
+            
+            function fillData(jsonObj){
+                saveRecNoToLS(jsonObj);
+                var record = JSON.parse(jsonObj.data).record;
+                $('#projectName').val(record.projectName);
+                $('#assignedto').val(record.assignedto);
+                $('#assignmentdate').val(record.assignmentdate);
+                $('#deadline').val(record.deadline);
+                
+            }
+            
+            function getProject(){
+                var projectIdJsonObj = getProjectIdAsJasonObj();
+                var getRequest = createGET_BY_KEYRequest(connToken,dbname,relationname,projectIdJsonObj);
+                jQuery.ajaxSetup({async: false});
+                var resJsonObj = executeCommandAtGivenBaseURL(getRequest,jpdbBaseURL,jpdbIRL);
+                jQuery.ajaxSetup({async: true});
+                if(resJsonObj.status ===400){
+                    $("#save").prop('disabled',false);
+                    $("#reset").prop('disabled',false);
+                    $("#projectName").focus();
+                }else if (resJsonObj.status ===200){
+                    $("#projectId").prop('disabled',true);
+                    fillData(resJsonObj);
+                    $("#update").prop('disabled',false);
+                    $("#reset").prop('disabled',false);
+                    $("#projectName").focus();
+                }
+                
+            }
+           
+            function validateAndGetFormData() {
+                var projectIdVar = $("#projectId").val();
+                if (projectIdVar === "") {
+                    alert("Project ID Required Value");
+                    $("#projectId").focus();
+                    return "";
+                }
+                var projectNameVar = $("#projectName").val();
+                if (projectNameVar === "") {
+                    alert("Project Name is Required Value");
+                    $("#projectName").focus();
+                    return "";
+                }
+                var assignedtoVar = $("#assignedto").val();
+                if (assignedtoVar === "") {
+                    alert("Assigned To is Required Value");
+                    $("#assignedto").focus();
+                    return "";
+                }
+                var assignmentdateVar = $("#assignmentdate").val();
+                if (assignmentdateVar === "") {
+                    alert("Assignment Date is Required Value");
+                    $("#assignmentdate").focus();
+                    return "";
+                }
+                var deadlineVar = $("#deadline").val();
+                if (deadlineVar === "") {
+                    alert("Deadline is Required Value");
+                    $("#deadline").focus();
+                    return "";
+                }
+                var jsonStrObj = {
+                    projectId: projectIdVar,
+                    projectName: projectNameVar,
+                    assignedto: assignedtoVar,
+                    assignmentdate: assignmentdateVar,
+                    deadline: deadlineVar
+                };
+                return JSON.stringify(jsonStrObj);
+                }
+                
+            
+
+            function executeCommandAtGivenBaseURL(reqString, dbBaseUrl, apiEndPointUrl) {
+                var url = dbBaseUrl + apiEndPointUrl;
+                var jsonObj;
+                $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+                }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+                });
+                return jsonObj;
+            }
+            
+            function resetForm() {
+                $("#projectId").val("");
+                $("#projectName").val("");
+                $("#assignedto").val("");
+                $("#assignmentdate").val("");
+                $("#deadline").val("");
+                $("#projectId").prop('disabled',false);
+                $("#save").prop('disabled',true);
+                $("#update").prop('disabled',true);
+                $("#reset").prop('disabled',true);
+                $("#projectId").focus();
+                
+            }
+            
+            
+            function saveData() {
+                var jsonObj = validateAndGetFormData();
+                if (jsonObj === "") {
+                    return"";
+                }
+                var putReqStr = createPUTRequest(connToken,jsonObj,dbname,relationname);
+               
+                jQuery.ajaxSetup({async: false});
+                var resultObj = executeCommandAtGivenBaseURL(putReqStr,jpdbBaseURL,jpdbIML);
+                
+                jQuery.ajaxSetup({async: true});
+                resetForm();
+                $("#projectId").focus();
+                
+            }
+       
+            function updateData(){
+                $('#update').prop('disabled',true);
+                jsonChg = validateAndGetFormData();
+                
+                var updateRequest = createUPDATERecordRequest(connToken,jsonChg,dbname,relationname,localStorage.getItem('recno'));
+                jQuery.ajaxSetup({async: false});
+                var resJsonObj = executeCommandAtGivenBaseURL(updateRequest,jpdbBaseURL,jpdbIML);
+                jQuery.ajaxSetup({async: true});
+                console.log(resJsonObj);
+                resetForm();
+                $("#projectId").focus();
+            }
+            
+            
+            
+        </script>
     </body>
 </html>

@@ -67,7 +67,7 @@
                 var jsonStr={
                     id:projectId
                 };
-                return JASON.stringify(jsonStr);
+                return JSON.stringify(jsonStr);
             }
             
             function fillData(jsonObj){

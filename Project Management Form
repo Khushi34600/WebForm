@@ -19,7 +19,7 @@
             <form id="projectForm" method="get">
                 <div class="form-group">
                     <label >Project ID:</label>
-                    <input type='text'  id='projectId' class='form-control' onclick="getProject()" placeholder="Enter Project ID" required>
+                    <input type='text'  id='projectId' class='form-control' onchange="getProject()" placeholder="Enter Project ID" required>
                 </div>
                 <div>
                     <label >Project Name:</label>
@@ -62,10 +62,10 @@
                 localStorage.setItem('recno',lvData.rec_no);
             }
             
-            function getProjectIdAsJasonObj(){
+            function getProjectIdAsJsonObj(){
                 var projectId = $('#projectId').val();
                 var jsonStr={
-                    id:projectId
+                    projectId:projectId
                 };
                 return JSON.stringify(jsonStr);
             }
@@ -81,7 +81,7 @@
             }
             
             function getProject(){
-                var projectIdJsonObj = getProjectIdAsJasonObj();
+                var projectIdJsonObj = getProjectIdAsJsonObj();
                 var getRequest = createGET_BY_KEYRequest(connToken,dbname,relationname,projectIdJsonObj);
                 jQuery.ajaxSetup({async: false});
                 var resJsonObj = executeCommandAtGivenBaseURL(getRequest,jpdbBaseURL,jpdbIRL);
